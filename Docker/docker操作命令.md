@@ -8,64 +8,64 @@ docker-machine可以说是一个虚拟机管理工具，它可以创建、更改
 	
 	Commands:
 	  active                Print which machine is active  
-				打印当前正在活动的虚拟机
+							打印当前正在活动的虚拟机
 
 	  config                Print the connection config for machine  
-				打印虚拟机的连接配置
+							打印虚拟机的连接配置
 
 	  create                Create a machine  
-				创建一台新的虚拟机
+							创建一台新的虚拟机
 
 	  env                   Display the commands to set up the environment for the Docker client  
-				显示连接Docker客户端的信息
+							显示连接Docker客户端的信息
 
 	  inspect               Inspect information about a machine
-				显示虚拟机的配置信息
+							显示虚拟机的配置信息
 
 	  ip                    Get the IP address of a machine
-				获取虚拟机的IP地址
+							获取虚拟机的IP地址
 	
 	  kill                  Kill a machine
-				强制关闭虚拟机
+							强制关闭虚拟机
 
 	  ls                    List machines
-				显示虚拟机列表								
+							显示虚拟机列表								
 	
 	  provision             Re-provision existing machines
-				重新配置现有的虚拟机
+							重新配置现有的虚拟机
 
 	  regenerate-certs      Regenerate TLS Certificates for a machine
-				重新为虚拟机生成TLS连接的证书
+							重新为虚拟机生成TLS连接的证书
 
 	  restart               Restart a machine
-				重启虚拟机
+							重启虚拟机
 
 	  rm                    Remove a machine
-				删除一台虚拟机
+							删除一台虚拟机
 
 	  ssh                   Log into or run a command on a machine with SSH.
-				使用SSH的方式登录虚拟机或运行命令
+							使用SSH的方式登录虚拟机或运行命令
 
 	  scp                   Copy files between machines
-				在两台虚拟机之间复制文件
+							在两台虚拟机之间复制文件
 
 	  start                 Start a machine
-				启动虚拟机
+							启动虚拟机
 
 	  status                Get the status of a machine
-				查看虚拟机状态
+							查看虚拟机状态
 
 	  stop                  Stop a machine
-				停止虚拟机
+							停止虚拟机
 
 	  upgrade               Upgrade a machine to the latest version of Docker
-				为虚拟机升级docker到最新版本
+							为虚拟机升级docker到最新版本
 
 	  url                   Get the URL of a machine
-				获得虚拟机的URL地址
+							获得虚拟机的URL地址
 
 	  version               Show the Docker Machine version or a machine docker version
-				获取docker的版本号
+							获取docker的版本号
 
 	  help                  Shows a list of commands or help for one command
 
@@ -82,7 +82,8 @@ Docker提供的 Docker Quickstart Terminal 启动时，默认连接的是default
 	             \    \         __/
 	              \____\_______/
 	
-	docker is configured to use the **default** machine with IP 192.168.99.100
+	docker is configured to use the default machine with IP 192.168.99.100
+	# 默认使用default虚拟机 
 	For help getting started, check out the docs at https://docs.docker.com
 	
 	Start interactive shell
@@ -91,8 +92,8 @@ Docker提供的 Docker Quickstart Terminal 启动时，默认连接的是default
 
 	$ docker-machine ls
 	NAME         ACTIVE   DRIVER       STATE     URL                         SWARM			DOCKER     ERRORS
-	default      *        virtualbox   Running   tcp://192.168.99.100:2376				v18.09.0
-	Tensorflow   -        virtualbox   Running   tcp://192.168.99.101:2376				v18.09.0
+	default      *        virtualbox   Running   tcp://192.168.99.100:2376					v18.09.0
+	Tensorflow   -        virtualbox   Running   tcp://192.168.99.101:2376					v18.09.0
 
 ACTIVE中的*代表正在与当前窗口通信的虚拟机，在当前窗口执行的所有操作（比如拉取镜像）都是针对正在通信的虚拟机。
 
@@ -113,5 +114,103 @@ ACTIVE中的*代表正在与当前窗口通信的虚拟机，在当前窗口执�
 	$ eval $(docker-machine env Tensorflow)
 	docker-machine ls
 	NAME         ACTIVE   DRIVER       STATE     URL                         SWARM			DOCKER     ERRORS
-	default      -        virtualbox   Running   tcp://192.168.99.100:2376				v18.09.0
-	Tensorflow   *        virtualbox   Running   tcp://192.168.99.101:2376				v18.09.0
+	default      -        virtualbox   Running   tcp://192.168.99.100:2376					v18.09.0
+	Tensorflow   *        virtualbox   Running   tcp://192.168.99.101:2376					v18.09.0
+
+## 通过xshell访问虚拟机 ##
+
+通过docker-machine创建了虚拟机，可以通过配置xshell等ssh连接工具方便的连接它。
+
+docker-machine config 会显示与当前窗口通信的虚拟机的连接配置信息
+
+	$ docker-machine config
+
+	--tlsverify
+	--tlscacert="C:\\Users\\xxx\\.docker\\machine\\machines\\default\\ca.pem"
+	
+	--tlscert="C:\\Users\\xxx\\.docker\\machine\\machines\\default\\cert.pem"
+	
+	--tlskey="C:\\Users\\xxx\\.docker\\machine\\machines\\default\\key.pem"
+	-H=tcp://192.168.99.100:2376
+
+显示当前虚拟机的连接地址是**192.168.99.100**，ssh端口号为**22**
+
+用户名默认为**docker**，密码默认为**tcuser**。
+
+配置完成之后即可访问docker的虚拟主机。
+
+	Connecting to 192.168.99.100:22...
+	Connection established.
+	To escape to local shell, press 'Ctrl+Alt+]'.
+	
+	   ( '>')
+	  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+	 (/-_--_-\)           www.tinycorelinux.net
+
+
+## docker ##
+
+docker主要是用来对单一虚拟机内部进行操作。
+
+通俗来讲，docker-machine就像网管一样，帮你安装电脑，开开机什么的。而docker更像是系统的管理员，可以让你往你的电脑里面安装各种软件。
+
+1. 拉取镜像： docker pull 镜像名：版本号（不填写版本号，默认为latest）
+
+		docker@default:~$ docker pull python:2.7.8
+		2.7.8: Pulling from library/python
+		a3ed95caeb02: Pull complete 
+		5d3df020ecd3: Downloading [=>                                                 ]  2.153MB/59.17MB
+		ecf4356ceda8: Downloading [=>                                                 ]  2.152MB/83.14MB
+		525789497646: Downloading [=====>                                             ]  1.456MB/12.63MB
+		ac0a3996cf90: Waiting 
+		779176b4a005: Waiting 
+		bff1d023a551: Waiting 
+		5ed0edbedc0d: Waiting 
+	
+
+	通过该命令来拉取镜像，当前虚拟机的所有镜像可以通过docker images来查看
+
+		docker@default:~$ docker images
+		REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+		ubuntu              latest              93fd78260bd1        5 weeks ago         86.2MB
+
+
+	
+2. 运行镜像： docker run 镜像名
+		
+
+		docker@default:~$ docker run -it ubuntu
+		root@54e2c9fa20ee:/#
+
+	这时，镜像就已经开始运行，生成一个容器并且分配给你一个控制台，让你可以通过shell来操作运行的镜像。
+
+	这里需要注意两个参数：
+
+		-i，--interactive                    Keep STDIN open even if not attached
+											 保持STDIN打开，即使没有连接
+
+		-t, --tty                            Allocate a pseudo-TTY
+											 分配一个虚拟控制台
+
+		-p，--publish list                   Publish a container's port(s) to the host
+											 将容器端口映射到虚拟机端口
+
+	想要退出当前容器，在控制台输入exit即可
+
+3. 查找镜像： docker search 镜像名
+
+		docker@default:~$ docker search Tensorflow
+		NAME                                DESCRIPTION                                     STARS               OFFICIAL            AUTOMATED
+		tensorflow/tensorflow               Official Docker images for the machine learn…   1248                                    
+		jupyter/tensorflow-notebook         Jupyter Notebook Scientific Python Stack w/ …   101                                     
+		xblaster/tensorflow-jupyter         Dockerized Jupyter with tensorflow              52                                      [OK]
+		tensorflow/serving                  Official images for TensorFlow Serving (http…   32                                      
+		floydhub/tensorflow                 tensorflow                                      15                                      [OK]
+                                     
+
+	
+	OFFICIAL： 表示是否是由官方发布的
+
+	AUTOMATED： 自动构建相关
+
+
