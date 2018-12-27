@@ -116,3 +116,101 @@ ACTIVE中的*代表正在与当前窗口通信的虚拟机，在当前窗口执�
 	NAME         ACTIVE   DRIVER       STATE     URL                         SWARM			DOCKER     ERRORS
 	default      -        virtualbox   Running   tcp://192.168.99.100:2376					v18.09.0
 	Tensorflow   *        virtualbox   Running   tcp://192.168.99.101:2376					v18.09.0
+
+## 通过xshell访问虚拟机 ##
+
+通过docker-machine创建了虚拟机，可以通过配置xshell等ssh连接工具方便的连接它。
+
+docker-machine config 会显示与当前窗口通信的虚拟机的连接配置信息
+
+	$ docker-machine config
+
+	--tlsverify
+	--tlscacert="C:\\Users\\xxx\\.docker\\machine\\machines\\default\\ca.pem"
+	
+	--tlscert="C:\\Users\\xxx\\.docker\\machine\\machines\\default\\cert.pem"
+	
+	--tlskey="C:\\Users\\xxx\\.docker\\machine\\machines\\default\\key.pem"
+	-H=tcp://192.168.99.100:2376
+
+显示当前虚拟机的连接地址是**192.168.99.100**，ssh端口号为**22**
+
+用户名默认为**docker**，密码默认为**tcuser**。
+
+配置完成之后即可访问docker的虚拟主机。
+
+	Connecting to 192.168.99.100:22...
+	Connection established.
+	To escape to local shell, press 'Ctrl+Alt+]'.
+	
+	   ( '>')
+	  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+	 (/-_--_-\)           www.tinycorelinux.net
+
+
+## docker ##
+
+docker主要是用来对单一虚拟机内部进行操作。
+
+通俗来讲，docker-machine就像网管一样，帮你安装电脑，开开机什么的。而docker更像是系统的管理员，可以让你往你的电脑里面安装各种软件。
+
+1. 拉取镜像： docker pull 镜像名：版本号（不填写版本号，默认为latest）
+
+		docker@default:~$ docker pull python:2.7.8
+		2.7.8: Pulling from library/python
+		a3ed95caeb02: Pull complete 
+		5d3df020ecd3: Downloading [=>                                                 ]  2.153MB/59.17MB
+		ecf4356ceda8: Downloading [=>                                                 ]  2.152MB/83.14MB
+		525789497646: Downloading [=====>                                             ]  1.456MB/12.63MB
+		ac0a3996cf90: Waiting 
+		779176b4a005: Waiting 
+		bff1d023a551: Waiting 
+		5ed0edbedc0d: Waiting 
+	
+
+	通过该命令来拉取镜像，当前虚拟机的所有镜像可以通过docker images来查看
+
+		docker@default:~$ docker images
+		REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+		ubuntu              latest              93fd78260bd1        5 weeks ago         86.2MB
+
+
+	
+2. 运行镜像： docker run 镜像名
+		
+
+		docker@default:~$ docker run -it ubuntu
+		root@54e2c9fa20ee:/#
+
+	这时，镜像就已经开始运行，生成一个容器并且分配给你一个控制台，让你可以通过shell来操作运行的镜像。
+
+	这里需要注意两个参数：
+
+		-i，--interactive                    Keep STDIN open even if not attached
+											 保持STDIN打开，即使没有连接
+
+		-t, --tty                            Allocate a pseudo-TTY
+											 分配一个虚拟控制台
+
+		-p，--publish list                   Publish a container's port(s) to the host
+											 将容器端口映射到虚拟机端口
+
+	想要退出当前容器，在控制台输入exit即可
+
+3. 查找镜像： docker search 镜像名
+
+		docker@default:~$ docker search Tensorflow
+		NAME                                DESCRIPTION                                     STARS               OFFICIAL            AUTOMATED
+		tensorflow/tensorflow               Official Docker images for the machine learn…   1248                                    
+		jupyter/tensorflow-notebook         Jupyter Notebook Scientific Python Stack w/ …   101                                     
+		xblaster/tensorflow-jupyter         Dockerized Jupyter with tensorflow              52                                      [OK]
+		tensorflow/serving                  Official images for TensorFlow Serving (http…   32                                      
+		floydhub/tensorflow                 tensorflow                                      15                                      [OK]
+                                     
+
+	
+	OFFICIAL： 表示是否是由官方发布的
+
+	AUTOMATED： 自动构建相关
+
+
