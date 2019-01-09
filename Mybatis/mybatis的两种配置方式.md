@@ -24,7 +24,7 @@
 	在启动类中添加对mapper包扫描@MapperScan
 
 		@SpringBootApplication
-		@MapperScan("com.example.demo")
+		@MapperScan("com.example.demo.mapper")
 		public class Application {
 		
 			public static void main(String[] args) {
