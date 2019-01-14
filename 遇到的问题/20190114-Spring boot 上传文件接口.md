@@ -76,4 +76,27 @@
 	        return "success";
 	    }
 
-我检查，路径是存在的，但不知道为什么就是报Unhandled exception: java.io.FileNotFoundException错误
+我检查，路径是存在的，但不知道为什么就是报Unhandled exception: java.io.FileNotFoundException错误，后来发现必须将IO操作放在try...catach语句中才行
+
+
+	@RequestMapping(value = "/uploadFileAndInfo", method = RequestMethod.POST)
+    public String uploadFileAndInfo(
+            @RequestParam(value = "file") MultipartFile file,
+            @RequestParam(value = "user") String user
+    ){
+        System.out.println(file.getContentType());
+        System.out.println(file.getSize());
+        System.out.println(file.getOriginalFilename());
+        System.out.println(user);
+        String filePath = "F:" + File.separator + "translation_pdf" + File.separator + file.getOriginalFilename();
+        File f = new File(filePath);
+        if(!f.getParentFile().exists()){ //判断文件父目录是否存在
+            f.getParentFile().mkdir();
+        }
+        try {
+            file.transferTo(f);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "success";
+    }
