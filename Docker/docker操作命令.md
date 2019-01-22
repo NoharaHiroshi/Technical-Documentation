@@ -213,4 +213,9 @@ docker主要是用来对单一虚拟机内部进行操作。
 
 	AUTOMATED： 自动构建相关
 
+> 哦，忘了写了，Docker镜像重启后会丢失数据，因此需要挂一个本地的目录上去，持久存储数据。
+
+	docker run -it -v /docker/default:/docker_default 镜像名
+	
+	-v		挂载磁盘（本地目录：挂载目录）
 
