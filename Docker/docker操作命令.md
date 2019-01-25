@@ -213,4 +213,42 @@ docker主要是用来对单一虚拟机内部进行操作。
 
 	AUTOMATED： 自动构建相关
 
+## docker持久化 ##
+
+Docker镜像重启后会发现刚刚安装的vim没了，日志也没有了，究其原因，docker容器只是作为一个运行环境存在的，它的本意并不是保存数据。
+而我们肯定会希望这次的辛苦成果可以延续到下次使用，那么就需要持久化数据了。
+
+**数据层面的持久化**
+
+如果我们只是想要将数据保存下来，那么比较推荐的做法是将本地目录挂载到容器的目录中。这样把容器在运行过程中获得的数据保存到挂载目录上，实际上就是保存到了本地，这些数据是不会因docker镜像的重启而丢失的。
+
+运行镜像时，添加-v参数 
+
+	docker run -it -v /docker/default:/docker_default 镜像名
+	
+	-v		挂载磁盘（本地目录：挂载目录）
+	
+**容器的持久化**
+
+当我们为容器安装了新的应用，或者更改了系统的配置，那么光是保存数据肯定是不够的了，那这时就需要将整个容器备份下来，供下次使用。
+
+	docker@default:~$ docker ps
+	CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+	2e21db4656f6        ubuntu              "/bin/bash"         47 seconds ago      Up 46 seconds                           gifted_mahavira
+
+可以看到CONTAINER ID，提交
+
+	docker commit 2e21db4656f6 ubuntu1
+	
+再看就多了刚刚新建的镜像
+
+	docker@default:/$ docker images
+	REPOSITORY          TAG                 IMAGE ID            CREATED              SIZE
+	ubuntu1             latest              e0d52d6c8bf8        About a minute ago   170MB
+	pycharm_helpers     PY-162.1237.1       da35886ab4f4        3 weeks ago          22.2MB
+	node                latest              21421bbe6a42        3 weeks ago          894MB
+	ubuntu              latest              93fd78260bd1        2 months ago         86.2MB
+	python              2.7.8               964c736ee415        4 years ago          801MB
+	
+再次运行新建的镜像，发现刚刚创建的内容全都保留了下来。
 
